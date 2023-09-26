@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur de livraison par drones</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./leaflet/leaflet.css" />
+    <script src="./leaflet/leaflet.js"></script>
+    <script type="text/javascript" src="MovingMarker.js"></script>
+
+</head>
+<body>
+    <header>
+        <div class="logo"></div>
+    </header>
+    <main>
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+        <div class="drones-container">
+            <select name="drones" id="drones">
+                <option value="">--Choisis un Drone--</option>
+                <option value="drone1">Drone n°1</option>
+                <option value="drone2">Drone n°2</option>
+                <option value="drone3">Drone n°3</option>
+            </select>
+            <select name="start" id="start">
+                <option value="">--Choisis une ville de Départ--</option>
+                <option value="bordeaux">Bordeaux</option>
+                <option value="lyon">Lyon</option>
+                <option value="paris">Paris</option>
+                <option value="marseille">Marseille</option>
+                <option value="lille">Lille</option>
+                <option value="strasbourg">Strasbourg</option>
+                <option value="nantes">Nantes</option>
+            </select>
+            <select name="end" id="end">
+                <option value="">--Choisis une ville de D'arrivée--</option>
+                <option value="bordeaux">Bordeaux</option>
+                <option value="lyon">Lyon</option>
+                <option value="paris">Paris</option>
+                <option value="marseille">Marseille</option>
+                <option value="lille">Lille</option>
+                <option value="strasbourg">Strasbourg</option>
+                <option value="nantes">Nantes</option>
+            </select>
+        </div>
+        <button id="startButton">START</button>
+        <input type="text" id="speed" value="4000"> Vitesse
+        <div id="compteurLat">
+
+        </div>
+        <div id="compteurLong">
+            
+        </div>
+    </main>
+</body>
+
+<script src="script.js" defer></script>
+</html>
