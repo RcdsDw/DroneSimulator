@@ -1,10 +1,52 @@
 #map {
     height: 560px;
-    max-width: 1300px;
+    max-width: 100%;
+    border-radius: 50px 50px 50px 0px;
 }
 
 #startButton {
-    margin-left: 45%;
-    font-size: 50px;
+    margin-left: 46%;
+    font-size: 35px;
     border-radius: 25px;
 }
+
+#speed {
+    width: 50px;
+}
+
+#end, #start, #drones {
+    width: 300px;
+    margin: 5px 0px;
+}
+
+#compteurLat, #compteurLng {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    top: -50px;
+    right: 0;
+    max-width: max-content;
+}
+
+#Lat, #Lng {
+    margin-left: 5px;
+}
+
+#searchInput {
+    width: 300px;
+}
+
+#search {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#activeContainer {
+    width: max-content;
+    position: relative;
+    bottom: 400px;
+    left: 75%;
+    right: 0;
+}
+
