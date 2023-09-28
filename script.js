@@ -53,11 +53,11 @@ let violetIcon = new L.Icon({
 	popupAnchor: [1, -34],
 	shadowSize: [41, 41]
 });
-
+ 
 // Tableau des différentes villes
 
 let villes = [
-    {value: "", nom: "Choisir une ville de départ", nom2: "Choisir une ville d'arrivée", coordonnees: "" },
+    {value: "select", nom: "Choisir une ville de départ", nom2: "Choisir une ville d'arrivée", coordonnees: "" },
     {value: "Bordeaux", nom: "Bordeaux", coordonnees: [44.820, -0.565] },
     {value: "Lyon", nom: "Lyon", coordonnees: [45.743, 4.842] },
     {value: "Paris", nom: "Paris", coordonnees: [48.827, 2.370] },
@@ -76,7 +76,7 @@ let villes = [
 ];
 
 let dronesTab = [ 
-    {value: "", nom: "Choisir un drone"},
+    {value: "select", nom: "Choisir un drone"},
     {value: "drone1", nom: "Drone n°1", color: blueIcon, active: 'activeDrone1'},
     {value: "drone2", nom: "Drone n°2", color: redIcon, active: 'activeDrone2'},
     {value: "drone3", nom: "Drone n°3", color: greenIcon, active: 'activeDrone3'},
@@ -162,12 +162,18 @@ let end = document.getElementById('end');
 for (let i = 0; i < villes.length; i++) {
 
     let optionStart = document.createElement('option');
+    if (i === 0) {
+        optionStart.disabled = true;
+        optionStart.selected = true;
+    }
     optionStart.value = `${villes[i].value}`;
     optionStart.text = `${villes[i].nom}`;
 
     let optionEnd = document.createElement('option');
     if (i === 0) {
         optionEnd.text = `${villes[i].nom2}`;
+        optionEnd.disabled = true;
+        optionEnd.selected = true;
     } else {
         optionEnd.text = `${villes[i].nom}`;
     }
@@ -182,9 +188,16 @@ for (let i = 0; i < villes.length; i++) {
 let drones = document.getElementById('drones');
 
 for (let i = 0; i < dronesTab.length; i++) {
-
+    
     let optionDrones = document.createElement('option');
+
+    if (i === 0) {
+        optionDrones.disabled = true;
+        optionDrones.selected = true;
+    }
+    
     optionDrones.value = `${dronesTab[i].value}`;
+    optionDrones.id = `${dronesTab[i].value}`;
     optionDrones.text = `${dronesTab[i].nom}`;
     
     drones.add(optionDrones, null);
@@ -192,9 +205,9 @@ for (let i = 0; i < dronesTab.length; i++) {
 
 // Affichage de la carte avec les coordonnées*
 
-let zoom = 6;
+let zoom = 6.3;
 
-let map = L.map('map').setView([46.24, 2.46], zoom);
+let map = L.map('map').setView([46.468, 2.46], zoom);
 
 // Affichage des tuiles de la carte
 
@@ -209,43 +222,54 @@ let startButton = document.getElementById('startButton');
 
 // Récupération de la div d'affichage des drones activeList
 
-let activeList = document.getElementById('activeList')
+let activeList = document.getElementById('activeList');
 
-startButton.onclick = function() {
-    console.log(villes);
-    let start = document.getElementById('start').value;
-    let end = document.getElementById('end').value;
-    console.log(start);
-    console.log(end);
+    startButton.onclick = function() {
+        if (start.value === villes[0].value | end.value === villes[0].value | drones.value === dronesTab[0].value) {
+            alert("Veuillez choisir un drone et renseigner la ville de départ et d'arrivée")
+        } else if (start.value === end.value) {
+            alert('Veuillez ne pas renseigner la même ville dans les deux sélecteurs')
+        } else {
+        console.log(villes);
+        let start = document.getElementById('start').value;
+        let end = document.getElementById('end').value;
+        console.log(start);
+        console.log(end);
 
-    for (let i = 0; i < villes.length; i++) {
-        if (start === villes[i].value) {
-            startCity = villes[i].coordonnees
-            startCityName = villes[i].nom
+        for (let i = 0; i < villes.length; i++) {
+            if (start === villes[i].value) {
+                startCity = villes[i].coordonnees
+                startCityName = villes[i].nom
 
-        } else if (end === villes[i].value) {
-            endCity = villes[i].coordonnees
-            endCityName = villes[i].nom
+            } else if (end === villes[i].value) {
+                endCity = villes[i].coordonnees
+                endCityName = villes[i].nom
+            }
+        };
+
+        let redPoint = '<i class="fa-solid fa-circle fa-beat-fade" style="color: #dd0e0e;"></i>'
+        let droneActifId = null;
+        let droneRemoved = null;
+
+        for (let i = 0; i < dronesTab.length; i++) {
+            if (drones.value === dronesTab[i].value) {
+                activeList.innerHTML += `<li id="${dronesTab[i].active}"> Le ${dronesTab[i].nom} est en livraison. ${redPoint} </li>`;
+                iconDrone = dronesTab[i].color;
+                droneActifId = dronesTab[i].active;
+                console.log(drones.value)
+                droneRemoved = document.getElementById(`${drones.value}`);
+
+                droneRemoved.style.display = 'none';
+                drones.value = dronesTab[0].value;
+            };
         }
+
+        startDrone(startCity, endCity, iconDrone, startCityName, endCityName, droneActifId, droneRemoved)
+        };
     };
 
-    let redPoint = '<i class="fa-solid fa-circle fa-beat-fade" style="color: #dd0e0e;"></i>'
-    let droneActifId = null;
+startDrone = function(startCity, endCity, iconDrone, startCityName, endCityName, droneActifId, droneRemoved){
 
-    for (let i = 0; i < dronesTab.length; i++) {
-        if (drones.value === dronesTab[i].value) {
-            activeList.innerHTML += `<li id="${dronesTab[i].active}"> Le ${dronesTab[i].nom} est en livraison. ${redPoint} </li>`;
-            iconDrone = dronesTab[i].color;
-            droneActifId = dronesTab[i].active;
-        };
-    }
-
-    startDrone(startCity, endCity, iconDrone, startCityName, endCityName, droneActifId)
-};
-
-startDrone = function(startCity, endCity, iconDrone, startCityName, endCityName, droneActifId){
-
-    console.log(droneActifId);
 
     let speed = document.getElementById('speed').value;
     let realSpeed = speed*100;
@@ -261,8 +285,11 @@ startDrone = function(startCity, endCity, iconDrone, startCityName, endCityName,
         marker.closePopup();
         console.log(activeList)
         setTimeout(function() {
-            document.getElementById(droneActifId).remove()
-            marker.remove()
+            
+            console.log(document.getElementById(droneActifId));
+            droneRemoved.style.display = 'block';
+            document.getElementById(droneActifId).remove();
+            marker.remove();
         }, 500)
     }, realSpeed);    
 
