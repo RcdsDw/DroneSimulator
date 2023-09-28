@@ -5,9 +5,16 @@
 }
 
 #startButton {
-    margin-left: 46%;
+    width: 150px;
+    position: relative;
+    left: 46%;
     font-size: 35px;
     border-radius: 25px;
+    transition: 0.3s ease-in-out;
+    margin-bottom: 5px;
+    &:hover {
+        scale: 1.2;
+    }
 }
 
 #speed {
@@ -48,5 +55,9 @@
     bottom: 400px;
     left: 75%;
     right: 0;
+}
+
+li {
+    list-style-type: none;
 }
 
