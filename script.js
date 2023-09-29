@@ -1,100 +1,5 @@
-// Differents markers
-
-let blueIcon = new L.Icon({
-	iconUrl: './leaflet/images/drone_blue.png',
-	shadowUrl: './leaflet/images/marker-shadow.png',
-	iconSize: [36, 36],
-	iconAnchor: [12, 41],
-	popupAnchor: [1, -34],
-	shadowSize: [36, 36]
-});
-
-let redIcon = new L.Icon({
-	iconUrl: './leaflet/images/drone_red.png',
-	shadowUrl: './leaflet/images/marker-shadow.png',
-	iconSize: [36, 36],
-	iconAnchor: [12, 41],
-	popupAnchor: [1, -34],
-	shadowSize: [36, 36]
-});
-
-let greenIcon = new L.Icon({
-	iconUrl: './leaflet/images/drone_green.png',
-	shadowUrl: './leaflet/images/marker-shadow.png',
-	iconSize: [36, 36],
-	iconAnchor: [12, 41],
-	popupAnchor: [1, -34],
-	shadowSize: [36, 36]
-});
-
-let goldIcon = new L.Icon({
-	iconUrl: './leaflet/images/drone_gold.png',
-	shadowUrl: './leaflet/images/marker-shadow.png',
-	iconSize: [36, 36],
-	iconAnchor: [12, 41],
-	popupAnchor: [1, -34],
-	shadowSize: [36, 36]
-});
-
-let blackIcon = new L.Icon({
-	iconUrl: './leaflet/images/drone_black.png',
-	shadowUrl: './leaflet/images/marker-shadow.png',
-	iconSize: [36, 36],
-	iconAnchor: [12, 41],
-	popupAnchor: [1, -34],
-	shadowSize: [36, 36]
-});
-
-let violetIcon = new L.Icon({
-	iconUrl: './leaflet/images/drone_violet.png',
-	shadowUrl: './leaflet/images/marker-shadow.png',
-	iconSize: [36, 36],
-	iconAnchor: [12, 41],
-	popupAnchor: [1, -34],
-	shadowSize: [36, 36]
-});
- 
-// Tableau des différentes villes
-
-let villes = [
-    {value: "select", nom: "Choisir une ville de départ", nom2: "Choisir une ville d'arrivée", coordonnees: "" },
-    {value: "Bordeaux", nom: "Bordeaux", coordonnees: [44.820, -0.565] },
-    {value: "Lyon", nom: "Lyon", coordonnees: [45.743, 4.842] },
-    {value: "Paris", nom: "Paris", coordonnees: [48.827, 2.370] },
-    {value: "Marseille", nom: "Marseille", coordonnees: [43.292, 5.369] },
-    {value: "Lille", nom: "Lille", coordonnees: [50.618, 3.069] },
-    {value: "Strasbourg", nom: "Strasbourg", coordonnees: [48.577, 7.758] },
-    {value: "Nantes", nom: "Nantes", coordonnees: [47.212, -1.555] },
-    {value: "Toulouse", nom: "Toulouse", coordonnees: [43.604, 1.443] },
-    {value: "Nice", nom: "Nice", coordonnees: [43.703, 7.266] },
-    {value: "Rennes", nom: "Rennes", coordonnees: [48.117, -1.677] },
-    {value: "Montpellier", nom: "Montpellier", coordonnees: [43.611, 3.877] },
-    {value: "Brest", nom: "Brest", coordonnees: [48.390, -4.486] },
-    {value: "Grenoble", nom: "Grenoble", coordonnees: [45.188, 5.724] },
-    {value: "Dijon", nom: "Dijon", coordonnees: [47.322, 5.041] },
-    {value: "Le Havre", nom: "Le Havre", coordonnees: [49.493, 0.107] }
-];
-
-let dronesTab = [ 
-    {value: "select", nom: "Choisir un drone"},
-    {value: "drone1", nom: "Drone n°1", color: blueIcon, active: 'activeDrone1'},
-    {value: "drone2", nom: "Drone n°2", color: redIcon, active: 'activeDrone2'},
-    {value: "drone3", nom: "Drone n°3", color: greenIcon, active: 'activeDrone3'},
-    {value: "drone4", nom: "Drone n°4", color: violetIcon, active: 'activeDrone4'},
-    {value: "drone5", nom: "Drone n°5", color: goldIcon, active: 'activeDrone5'},
-    {value: "drone6", nom: "Drone n°6", color: blackIcon, active: 'activeDrone6'}
-];
-
-// Test réutilisation d'un ancien code
-
-async function SearchCity(city) {
-    let response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&language=en&format=json`)
-    if (response.ok) {
-       return await response.json()
-    } else {
-        return false;
-    }
-}
+import { villes, dronesTab } from "./datas.js";
+import { SearchCity } from "./api.js";
 
 let search = document.getElementById('search')
 
@@ -233,10 +138,14 @@ let activeList = document.getElementById('activeList');
         console.log(villes);
         let start = document.getElementById('start').value;
         let end = document.getElementById('end').value;
-        console.log(start);
-        console.log(end);
+
+        let startCity = null;
+        let startCityName = null;
+        let endCity = null;
+        let endCityName = null;
 
         for (let i = 0; i < villes.length; i++) {
+            console.log(villes[i])
             if (start === villes[i].value) {
                 startCity = villes[i].coordonnees
                 startCityName = villes[i].nom
@@ -247,6 +156,7 @@ let activeList = document.getElementById('activeList');
             }
         };
 
+        let iconDrone = null;
         let redPoint = '<i class="fa-solid fa-circle fa-beat-fade" style="color: #dd0e0e;"></i>'
         let droneActifId = null;
         let droneRemoved = null;
@@ -277,9 +187,7 @@ let activeList = document.getElementById('activeList');
 
 // Fonction qui suit après la fonction onClick
 
-let chargeBar = document.getElementById('chargementBarAnime');
-
-startDrone = function(startCity, endCity, iconDrone, startCityName, endCityName, droneActifId, droneRemoved){
+    function startDrone(startCity, endCity, iconDrone, startCityName, endCityName, droneActifId, droneRemoved){
 
 
     let speed = document.getElementById('speed').value;
