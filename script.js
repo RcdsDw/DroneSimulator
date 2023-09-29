@@ -258,7 +258,7 @@ let activeList = document.getElementById('activeList');
                                         </br> 
                                             <div id="chargementContainer">
                                                 <div id="chargementBar"></div>
-                                                <div id="chargementBarAnime"></div>
+                                                <div id="chargementBarAnime${dronesTab[i].active}" class="chargementBarAnime"></div>
                                             </div>
                                         </li>`;
                 iconDrone = dronesTab[i].color;
@@ -293,23 +293,23 @@ startDrone = function(startCity, endCity, iconDrone, startCityName, endCityName,
     let progress = 0;
 
     function updateProgressBar() {
-        gsap.to('#chargementBarAnime', {
+        gsap.to(`#chargementBarAnime${droneActifId}`, {
             width: progress + '%',
-            duration: 1 // Durée de l'animation en secondes (ajustez si nécessaire)
+            duration: 1 
         });
     }
 
     let interval = setInterval(function() {
         if (progress < 100) {
-            progress += increment; // Incrémentez progress de 1%
+            progress += (increment / (realSpeed / 100));
             updateProgressBar();
         } else {
-            clearInterval(interval); // Arrêtez l'intervalle lorsque la progression atteint 100%
+            clearInterval(interval);
         }
         if (progress <= 0) {
-            clearInterval(interval); // Arrêtez l'intervalle lorsque realDuration atteint 0
+            clearInterval(interval);
         }
-    }, 1000); // Répétez toutes les secondes
+    },  900 / (realSpeed * 2));
 
     setTimeout(function() {
         marker.bindPopup(`Je viens de livrer à ${endCityName}, je retourne donc à ${startCityName}`).openPopup();

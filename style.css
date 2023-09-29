@@ -1,6 +1,9 @@
 html, main {
+    height: 100vh;
     background-color: rgb(55, 55, 55);
     color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: medium;
 }
 
 #map {
@@ -85,7 +88,7 @@ li {
 
 }
 
-#chargementBarAnime {
+.chargementBarAnime {
     position: absolute;
     background: #9fff86;
     top: 0; 
