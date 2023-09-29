@@ -253,7 +253,14 @@ let activeList = document.getElementById('activeList');
 
         for (let i = 0; i < dronesTab.length; i++) {
             if (drones.value === dronesTab[i].value) {
-                activeList.innerHTML += `<li id="${dronesTab[i].active}"> Le ${dronesTab[i].nom} est en livraison. ${redPoint} </li>`;
+                activeList.innerHTML += `<li id="${dronesTab[i].active}"> 
+                                            <p> Le ${dronesTab[i].nom} est en livraison. ${redPoint} </p> 
+                                        </br> 
+                                            <div id="chargementContainer">
+                                                <div id="chargementBar"></div>
+                                                <div id="chargementBarAnime"></div>
+                                            </div>
+                                        </li>`;
                 iconDrone = dronesTab[i].color;
                 droneActifId = dronesTab[i].active;
                 console.log(drones.value)
@@ -268,6 +275,10 @@ let activeList = document.getElementById('activeList');
         };
     };
 
+// Fonction qui suit après la fonction onClick
+
+let chargeBar = document.getElementById('chargementBarAnime');
+
 startDrone = function(startCity, endCity, iconDrone, startCityName, endCityName, droneActifId, droneRemoved){
 
 
@@ -277,6 +288,28 @@ startDrone = function(startCity, endCity, iconDrone, startCityName, endCityName,
     let marker = L.Marker.movingMarker([startCity, endCity, startCity], realSpeed, {icon: iconDrone}).addTo(map);
         
     marker.start();
+
+    let increment = 10; // Montant à incrémenter à chaque seconde
+    let progress = 0;
+
+    function updateProgressBar() {
+        gsap.to('#chargementBarAnime', {
+            width: progress + '%',
+            duration: 1 // Durée de l'animation en secondes (ajustez si nécessaire)
+        });
+    }
+
+    let interval = setInterval(function() {
+        if (progress < 100) {
+            progress += increment; // Incrémentez progress de 1%
+            updateProgressBar();
+        } else {
+            clearInterval(interval); // Arrêtez l'intervalle lorsque la progression atteint 100%
+        }
+        if (progress <= 0) {
+            clearInterval(interval); // Arrêtez l'intervalle lorsque realDuration atteint 0
+        }
+    }, 1000); // Répétez toutes les secondes
 
     setTimeout(function() {
         marker.bindPopup(`Je viens de livrer à ${endCityName}, je retourne donc à ${startCityName}`).openPopup();

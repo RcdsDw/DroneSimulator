@@ -68,3 +68,30 @@ li {
     list-style-type: none;
 }
 
+#chargementContainer {
+    position: relative; 
+    width: 100%; 
+    display: flex; 
+    justify-content: flex-end;
+    border: 3px solid white;
+    border-radius: 20px;
+    margin-top: -25px;
+}
+
+#chargementBar {
+    background-color: rgb(194, 194, 194);
+    height: 9px; 
+    width: 100%;
+
+}
+
+#chargementBarAnime {
+    position: absolute;
+    background: #9fff86;
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0; 
+    width: 0%;
+}
+
