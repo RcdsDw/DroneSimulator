@@ -24,9 +24,9 @@ Une app web de simulation de drones qui se déplacent d'un point A (entrepôt A)
 
 ## Docs et APIs
 
-[Open Météo](https://open-meteo.com/)
-[Leaflet](https://leafletjs.com/)
-[Plugin (Leaflet) MovingMarker](https://github.com/ewoken/Leaflet.MovingMarker)
+- [Open Météo](https://open-meteo.com/)
+- [Leaflet](https://leafletjs.com/)
+- [Plugin (Leaflet) MovingMarker](https://github.com/ewoken/Leaflet.MovingMarker)
 
 ## Démo
 
